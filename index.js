@@ -1,10 +1,9 @@
-//import * as tf from '@tensorflow/tfjs'
-
-const DEBUG = false
+const DEBUG = true
 
 const CELL_SIZE = 300
+const MNIST_SIZE = 28
 if (DEBUG) {
-  preview.width = preview.height = CELL_SIZE
+  preview.width = preview.height = MNIST_SIZE
 }
 const BRUSH_SIZE = CELL_SIZE / 20
 let DIFFICULTY = 80
@@ -31,17 +30,17 @@ function drawCircle(ctx, x, y, radius, fill) {
 const init = async () => {
   const model = await tf.loadLayersModel('/bin/model.json');
   const predict = (image, X, Y) => {
-    if (DEBUG) {
-      preview.getContext('2d').putImageData(image, 0, 0)
-    }
-
     // https://stackoverflow.com/questions/61772476/tensorflow-js-uncaught-error-error-when-checking-expected-conv2d-input-to-ha
-    const example = tf.browser.fromPixels(image, 1).resizeNearestNeighbor([28, 28]).reshape([1, 28, 28])
+    const example = tf.browser.fromPixels(image, 1)
+    const resized = example.resizeNearestNeighbor([28, 28])
+    const reshaped = resized.reshape([1, 28, 28])
     //example.print()
-    const prediction = model.predict(example).dataSync()
+    const prediction = model.predict(reshaped).dataSync()
     const pred = tf.argMax(prediction).dataSync()[0]
 
     if (DEBUG) {
+      tf.browser.toPixels(resized, preview)
+
       console.log('prediction', pred)
       output.innerText = pred
     }
@@ -84,7 +83,7 @@ const init = async () => {
       }
       const c = document.createElement('canvas')
       root.append(c)
-      const ctx = c.getContext('2d')
+      const ctx = c.getContext('2d', { willReadFrequently: true })
       c.width = CELL_SIZE
       c.height = CELL_SIZE
       ctx.fillStyle = '#000'
@@ -131,11 +130,6 @@ const init = async () => {
         const offsetY = (touches[0].pageY - offY) / c.offsetWidth * CELL_SIZE
         isDrawing = true
         putPixel(offsetX, offsetY)
-
-        if (DEBUG) {
-          const image = ctx.getImageData(0, 0, CELL_SIZE, CELL_SIZE)
-          preview.getContext('2d').putImageData(image, 0, 0)
-        }
       }
       c.ontouchend = (e) => {
         e.preventDefault()
@@ -159,8 +153,6 @@ const init = async () => {
           output.innerText = JSON.stringify({
             offsetX, offsetY
           })
-          const image = ctx.getImageData(0, 0, CELL_SIZE, CELL_SIZE)
-          preview.getContext('2d').putImageData(image, 0, 0)
         }
       }
 
