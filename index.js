@@ -1,5 +1,4 @@
-import * as tf from '@tensorflow/tfjs'
-const model = await tf.loadLayersModel('/bin/model.json');
+//import * as tf from '@tensorflow/tfjs'
 
 const DEBUG = false
 
@@ -19,26 +18,6 @@ diffInput.oninput = (e) => {
 let grid = []
 let ans = ''
 
-
-const predict = (image, X, Y) => {
-  if (DEBUG) {
-    preview.getContext('2d').putImageData(image, 0, 0)
-  }
-
-  // https://stackoverflow.com/questions/61772476/tensorflow-js-uncaught-error-error-when-checking-expected-conv2d-input-to-ha
-  const example = tf.browser.fromPixels(image, 1).resizeNearestNeighbor([28, 28]).reshape([1, 28, 28])
-  //example.print()
-  const prediction = model.predict(example).dataSync()
-  const pred = tf.argMax(prediction).dataSync()[0]
-
-  if (DEBUG) {
-    console.log('prediction', pred)
-    output.innerText = pred
-  }
-
-  grid[Y][X] = pred
-}
-
 function drawCircle(ctx, x, y, radius, fill) {
   ctx.beginPath()
   ctx.arc(x, y, radius, 0, 2 * Math.PI, false)
@@ -49,7 +28,27 @@ function drawCircle(ctx, x, y, radius, fill) {
 }
 
 
-const init = () => {
+const init = async () => {
+  const model = await tf.loadLayersModel('/bin/model.json');
+  const predict = (image, X, Y) => {
+    if (DEBUG) {
+      preview.getContext('2d').putImageData(image, 0, 0)
+    }
+
+    // https://stackoverflow.com/questions/61772476/tensorflow-js-uncaught-error-error-when-checking-expected-conv2d-input-to-ha
+    const example = tf.browser.fromPixels(image, 1).resizeNearestNeighbor([28, 28]).reshape([1, 28, 28])
+    //example.print()
+    const prediction = model.predict(example).dataSync()
+    const pred = tf.argMax(prediction).dataSync()[0]
+
+    if (DEBUG) {
+      console.log('prediction', pred)
+      output.innerText = pred
+    }
+
+    grid[Y][X] = pred
+  }
+
   const stringSudoku = sudoku.generate(DIFFICULTY)
   ans = sudoku.solve(stringSudoku)
   const numbers = stringSudoku.split('')
