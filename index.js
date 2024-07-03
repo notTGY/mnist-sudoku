@@ -1,3 +1,4 @@
+const MODEL = 'mlp'
 const DEBUG = true
 
 const CELL_SIZE = 300
@@ -28,13 +29,19 @@ function drawCircle(ctx, x, y, radius, fill) {
 
 
 const init = async () => {
-  const model = await tf.loadLayersModel('/bin/model.json');
+  const model = await tf.loadLayersModel(`/${MODEL}/model.json`);
   const predict = (image, X, Y) => {
     // https://stackoverflow.com/questions/61772476/tensorflow-js-uncaught-error-error-when-checking-expected-conv2d-input-to-ha
-    const example = tf.browser.fromPixels(image, 1)
+    const channels = MODEL === 'cnn' ? 4 : 1
+    const example = tf.browser.fromPixels(image, channels)
     const resized = example.resizeNearestNeighbor([28, 28])
-    const reshaped = resized.reshape([1, 28, 28])
-    //example.print()
+    let reshaped
+    if (MODEL === 'cnn') {
+      reshaped = resized.reshape([4, 28, 28, 1])
+    } else {
+      reshaped = resized.reshape([1, 28, 28])
+    }
+    //reshaped.print()
     const prediction = model.predict(reshaped).dataSync()
     const pred = tf.argMax(prediction).dataSync()[0]
 
