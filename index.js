@@ -1,3 +1,5 @@
+let modelLoaded = false
+let model
 const MODEL = 'mlp'
 const DEBUG = true
 
@@ -6,7 +8,7 @@ const MNIST_SIZE = 28
 if (DEBUG) {
   preview.width = preview.height = MNIST_SIZE
 }
-const BRUSH_SIZE = CELL_SIZE / 20
+const BRUSH_SIZE = CELL_SIZE / 15
 let DIFFICULTY = 80
 
 diffInput.oninput = (e) => {
@@ -29,7 +31,10 @@ function drawCircle(ctx, x, y, radius, fill) {
 
 
 const init = async () => {
-  const model = await tf.loadLayersModel(`/${MODEL}/model.json`);
+  if (!modelLoaded) {
+    model = await tf.loadLayersModel(`/${MODEL}/model.json`);
+    modelLoaded = true
+  }
   const predict = (image, X, Y) => {
     // https://stackoverflow.com/questions/61772476/tensorflow-js-uncaught-error-error-when-checking-expected-conv2d-input-to-ha
     const channels = MODEL === 'cnn' ? 4 : 1
@@ -173,6 +178,8 @@ const checkSudoku = () => {
   const cur = sudoku.board_grid_to_string(grid)
   if (cur === ans) {
     init()
+  } else {
+    alert('wrong')
   }
 }
 
