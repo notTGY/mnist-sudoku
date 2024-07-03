@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+  <title>mnist sudoku</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+  :root {
+    overscroll-behavior: none;
+  }
+  #root {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) 1px repeat(3, 1fr) 1px repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr) 1px repeat(3, 1fr) 1px repeat(3, 1fr);
+    max-width: 640px;
+    max-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+  }
+  #root>* {
+    user-select: none;
+    box-sizing: border-box;
+    aspect-ratio: 1;
+    max-width: 100%;
+    max-height: 100%;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    background: #000;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  </style>
+  </head>
+<body>
+<div id="root"></div>
+<button id="check">check</button>
+difficulty:
+<input type="range" min="17" max="80" step="1" value="80" id="diffInput">
+<span id="diff">80</span>
+
+<pre>
+"easy":         62
+"medium":       53
+"hard":         44
+"very-hard":    35
+"insane":       26
+"inhuman":      17
+</pre>
+
+<!--
+<canvas id="preview"></canvas>
+<div id="output"></div>
+-->
+<script src="sudoku.js"></script>
+<script type="module" src="index.js"></script>
+</body>
+</html>
