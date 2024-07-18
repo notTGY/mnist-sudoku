@@ -11,9 +11,33 @@ if (DEBUG) {
 const BRUSH_SIZE = CELL_SIZE / 15
 let DIFFICULTY = 80
 
+
+/*
 diffInput.oninput = (e) => {
   DIFFICULTY = Number(e.target.value)
   diff.innerText = DIFFICULTY
+  init()
+}
+*/
+
+easy.onclick = () => {
+  DIFFICULTY = 62
+  //diff.innerText = DIFFICULTY
+  init()
+}
+medium.onclick = () => {
+  DIFFICULTY = 53
+  //diff.innerText = DIFFICULTY
+  init()
+}
+hard.onclick = () => {
+  DIFFICULTY = 44
+  //diff.innerText = DIFFICULTY
+  init()
+}
+veryhard.onclick = () => {
+  DIFFICULTY = 35
+  //diff.innerText = DIFFICULTY
   init()
 }
 
@@ -32,7 +56,9 @@ function drawCircle(ctx, x, y, radius, fill) {
 
 const init = async () => {
   if (!modelLoaded) {
-    model = await tf.loadLayersModel(`/${MODEL}/model.json`);
+    if (typeof tf !== 'undefined') {
+      model = await tf.loadLayersModel(`/${MODEL}/model.json`);
+    }
     modelLoaded = true
   }
   const predict = (image, X, Y) => {
@@ -72,6 +98,7 @@ const init = async () => {
     if (Y % 3 === 0 && Y !== 0) {
       for (let X = 0; X < 11; X++) {
         const a = document.createElement('div')
+        a.className = 'placeholder'
         root.append(a)
       }
     }
@@ -83,6 +110,7 @@ const init = async () => {
 
       if (X % 3 === 0 && X !== 0) {
         const a = document.createElement('div')
+        a.className = 'placeholder'
         root.append(a)
       }
 
