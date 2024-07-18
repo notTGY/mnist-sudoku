@@ -79,7 +79,7 @@ const init = async () => {
     if (DEBUG) {
       tf.browser.toPixels(resized, preview)
 
-      console.log('prediction', pred)
+      //console.log('prediction', pred)
       output.innerText = pred
     }
 
