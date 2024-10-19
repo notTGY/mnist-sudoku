@@ -188,7 +188,8 @@ const init = async () => {
         if (isDrawing) {
           putPixel(offsetX, offsetY)
         }
-  const image = ctx.getImageData(0, 0, CELL_SIZE, CELL_SIZE)
+
+        const image = ctx.getImageData(0, 0, CELL_SIZE, CELL_SIZE)
         if (DEBUG) {
           output.innerText = JSON.stringify({
             offsetX, offsetY
