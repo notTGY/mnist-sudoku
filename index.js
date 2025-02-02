@@ -57,7 +57,7 @@ function drawCircle(ctx, x, y, radius, fill) {
 const init = async () => {
   if (!modelLoaded) {
     if (typeof tf !== 'undefined') {
-      model = await tf.loadLayersModel(`/${MODEL}/model.json`);
+      model = await tf.loadLayersModel(`./${MODEL}/model.json`);
     }
     modelLoaded = true
   }
